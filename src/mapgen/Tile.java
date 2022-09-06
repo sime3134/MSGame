@@ -1,5 +1,6 @@
 package mapgen;
 
+import core.ContentManager;
 import entity.GameObject;
 import metrics.Vector2D;
 
@@ -15,6 +16,11 @@ public class Tile extends GameObject {
 
     public Tile(Image sprite, Vector2D pos, boolean node) {
         super(sprite, pos);
+        this.node = node;
+    }
+
+    public Tile(Vector2D pos) {
+        super(ContentManager.getSprite("fire"), pos);
         this.node = node;
     }
 

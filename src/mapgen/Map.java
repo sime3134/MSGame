@@ -1,5 +1,6 @@
 package mapgen;
 
+import core.ContentManager;
 import core.Game;
 import metrics.Vector2D;
 import org.w3c.dom.Node;
@@ -17,22 +18,23 @@ public class Map {
     private ArrayList<Integer> newNodes;
     private int newNodePos;
 
-    public Map(Image standardSprite, int width, int height) {
+    public Map(int width, int height) {
         this.mapWidth = width;
         this.mapHeight = height;
-        map = new Tile[width][height];
-        this.generateMap(standardSprite);
+        map = new Tile[height][width];
+        newNodes = new ArrayList<>();
+        this.generateMap();
     }
 
     private Vector2D gridToPos(int row, int col) {
-        return new Vector2D(((float) col + .5f) * Game.tileSize, ((float) row + .5f) * Game.tileSize);
+        return new Vector2D((float) col * Game.tileSize, (float) row * Game.tileSize);
     }
 
-    private void generateMap(Image sprite) {
+    private void generateMap() {
         // Set all tiles to basic tiles
         for (int row = 0; row < mapHeight; row++){
             for (int col = 0; col < mapWidth; col++) {
-                map[row][col] = new Tile(sprite, gridToPos(row, col));
+                map[row][col] = new Tile(gridToPos(row, col));
             }
         }
 
@@ -40,7 +42,7 @@ public class Map {
         int blockWidth = 10;
 
         // Generating start node
-        map[mapHeight/2][0] = new Tile(sprite, gridToPos(mapHeight/2, 0),true);
+        map[mapHeight/2][0] = new Tile(ContentManager.getSprite("checker"), gridToPos(mapHeight/2, 0),true);
         newNodes.add(mapHeight/2);
         newNodePos = 0;
 
@@ -56,14 +58,17 @@ public class Map {
             for (int i = 0; i < noNodes; i++) {
                 int vertPos = i*mapHeight/noNodes + mapHeight/(noNodes*2);
                 newNodes.add(vertPos);
-
+                map[vertPos][newNodePos] = new Tile(ContentManager.getSprite("checker"), gridToPos(vertPos, newNodePos),true);
                 // Connect the old node to the new one
             }
         }
+    }
 
-
-
-
+    private void createPaths(ArrayList<Integer> leftNodes, ArrayList<Integer> rightNodes, int leftX, int leftY) {
+        
+    }
+    public Tile[][] getMap() {
+        return this.map;
     }
 
 }
