@@ -6,7 +6,7 @@ import metrics.Vector2D;
 import java.awt.*;
 
 public class MovingObject extends GameObject{
-    private Controller controller;
+    private final Controller controller;
     protected Vector2D velocity;
     protected double speed;
     public MovingObject(Controller controller, Image sprite) {

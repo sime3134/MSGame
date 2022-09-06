@@ -10,10 +10,10 @@ import java.util.List;
 
 public class Game {
 
-    private ContentManager content;
-    private Player player;
+    private final ContentManager content;
+    private final Player player;
 
-    private List<GameObject> gameObjects;
+    private final List<GameObject> gameObjects;
 
     public Game() {
         content = new ContentManager();
