@@ -6,7 +6,10 @@ import metrics.Vector2D;
 import org.w3c.dom.Node;
 
 import java.awt.*;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Stack;
 
 public class Map {
     Tile[][] map;
@@ -61,11 +64,54 @@ public class Map {
                 map[vertPos][newNodePos] = new Tile(ContentManager.getSprite("checker"), gridToPos(vertPos, newNodePos),true);
                 // Connect the old node to the new one
             }
+            if (oldNodes.size() > 1) {
+                createPaths(oldNodes, newNodes, oldNodePos, newNodePos);
+            }
         }
     }
 
-    private void createPaths(ArrayList<Integer> leftNodes, ArrayList<Integer> rightNodes, int leftX, int leftY) {
-        
+    private void createPaths(ArrayList<Integer> leftNodes, ArrayList<Integer> rightNodes, int leftX, int rightX) {
+        for (int i = 0; i < 3; i++) {
+            connectNodes(new Vector2D(leftX, leftNodes.get(i)), new Vector2D(rightX, rightNodes.get(i)));
+        }
+    }
+
+    private void connectNodes(Vector2D leftNode, Vector2D rightNode) {
+        SecureRandom rand = new SecureRandom();
+        int noPoints = (int) rand.nextGaussian(3.0f, 2.0f);
+        LinkedList<Vector2D> pointPosition = new LinkedList<>();
+        pointPosition.add(leftNode);
+        for (int i = 0; i < noPoints; i++) {
+            int pointX = rand.nextInt(leftNode.intX(), rightNode.intX());
+            int pointY;
+            if (leftNode.intY() != rightNode.intY()) {
+                pointY = rand.nextInt(Math.min(leftNode.intY(), rightNode.intY()) + rand.nextInt(-2, 2), Math.max(leftNode.intY(), rightNode.intY()) + rand.nextInt(-2, 2));
+            } else {
+                pointY = leftNode.intY() + rand.nextInt(-2, 2);
+            }
+            pointPosition.add(new Vector2D(pointX, pointY));
+        }
+        pointPosition.add(rightNode);
+        while (pointPosition.size() > 1) {
+            // Randomizing starting direction as vertical or horizontal
+            Vector2D startPos = pointPosition.pop();
+            Vector2D endPos = pointPosition.peek();
+            if (rand.nextBoolean()) {
+                for (int col = Math.min(startPos.intX(), endPos.intX()); col < Math.max(startPos.intX(), endPos.intX()); col++) {
+                    map[startPos.intY()][col] = new Tile(ContentManager.getSprite("checker"), gridToPos(startPos.intY(), col));
+                }
+                for (int row = Math.min(startPos.intY(), endPos.intY()); row < Math.max(startPos.intY(), endPos.intY()); row++) {
+                    map[row][startPos.intX()] = new Tile(ContentManager.getSprite("checker"), gridToPos(row, startPos.intX()));
+                }
+            } else {
+                for (int row = Math.min(startPos.intY(), endPos.intY()); row < Math.max(startPos.intY(), endPos.intY()); row++) {
+                    map[row][startPos.intX()] = new Tile(ContentManager.getSprite("checker"), gridToPos(row, startPos.intX()));
+                }
+                for (int col = Math.min(startPos.intX(), endPos.intX()); col < Math.max(startPos.intX(), endPos.intX()); col++) {
+                    map[startPos.intY()][col] = new Tile(ContentManager.getSprite("checker"), gridToPos(startPos.intY(), col));
+                }
+            }
+        }
     }
     public Tile[][] getMap() {
         return this.map;
