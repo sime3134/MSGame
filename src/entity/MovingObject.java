@@ -12,6 +12,8 @@ public class MovingObject extends GameObject{
     public MovingObject(Controller controller, Image sprite) {
         super(sprite);
         this.controller = controller;
+        velocity = new Vector2D(0,0);
+        speed = 4;
     }
 
     public void update(){
@@ -27,7 +29,8 @@ public class MovingObject extends GameObject{
         if (controller.requestedRight())
             velocityX++;
 
-        velocity = new Vector2D(velocityX, velocityY);
+        velocity.setX(velocityX);
+        velocity.setY(velocityY);
 
         velocity.normalize();
         velocity.multiply(speed);

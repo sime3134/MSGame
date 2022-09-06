@@ -1,6 +1,7 @@
 package gfx;
 
 import core.Game;
+import input.Input;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +34,7 @@ public class GameWindow extends JFrame {
         //canvas.addMouseListener(Input.getInstance());
         //canvas.addMouseMotionListener(Input.getInstance());
         add(canvas);
-        //addKeyListener(Input.getInstance());
+        addKeyListener(Input.getInstance());
         pack();
 
         canvas.createBufferStrategy(2);
