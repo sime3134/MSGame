@@ -1,17 +1,36 @@
 package core;
 
-import gfx.GameWindow;
+import entity.GameObject;
+import entity.Player;
+import input.PlayerController;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
 
+    private ContentManager content;
+    private Player player;
+
+    private List<GameObject> gameObjects;
+
     public Game() {
+        content = new ContentManager();
+        player = new Player(PlayerController.getInstance(), content.getSprite("player"));
+        gameObjects = new ArrayList<>();
+        gameObjects.add(player);
     }
 
     public void draw(Graphics graphics) {
+        for(GameObject obj : gameObjects){
+            obj.draw(graphics);
+        }
     }
 
     public void update() {
+        for(GameObject obj : gameObjects){
+            obj.update();
+        }
     }
 }

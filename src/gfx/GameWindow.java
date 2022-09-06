@@ -13,9 +13,8 @@ import java.awt.image.BufferStrategy;
  * The window frame that the game is displayed in.
  */
 public class GameWindow extends JFrame {
-
-    int screenWidth = 720;
-    int screenHeight = 480;
+    private int screenWidth = 720;
+    private int screenHeight = 480;
     private final Game game;
     private final Canvas canvas;
 
