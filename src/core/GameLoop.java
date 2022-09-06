@@ -1,6 +1,6 @@
 package core;
 
-import gfx.GameFrame;
+import gfx.GameWindow;
 
 /**
  * @author Simon Jern
@@ -9,11 +9,11 @@ import gfx.GameFrame;
 public class GameLoop implements Runnable {
 
     private final Game game;
-    private final GameFrame gameFrame;
+    private final GameWindow gameWindow;
 
-    public static final int FPS_LOCK = 60;
+    public static final int UPS_LOCK = 60;
 
-    private static final double updateRate = 1.0d/FPS_LOCK;
+    private static final double updateRate = 1.0d/ UPS_LOCK;
 
     private long nextStatTime;
     private int fps;
@@ -22,7 +22,7 @@ public class GameLoop implements Runnable {
 
     public GameLoop(Game game){
         this.game = game;
-        this.gameFrame = game.getGameFrame();
+        this.gameWindow = new GameWindow(game);
     }
 
     public void start(){
@@ -68,7 +68,7 @@ public class GameLoop implements Runnable {
     }
 
     private void draw() {
-        gameFrame.draw();
+        gameWindow.draw();
         fps++;
     }
 }

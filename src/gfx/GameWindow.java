@@ -12,14 +12,14 @@ import java.awt.image.BufferStrategy;
  * @author Simon Jern
  * The window frame that the game is displayed in.
  */
-public class GameFrame extends JFrame {
+public class GameWindow extends JFrame {
 
     int screenWidth = 720;
     int screenHeight = 480;
     private final Game game;
     private final Canvas canvas;
 
-    public GameFrame(Game game) {
+    public GameWindow(Game game) {
         this.game = game;
         setTitle("PuzzleQuest 2.0");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
