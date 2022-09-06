@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ContentManager {
-    private Map<String, Image> sprites;
+    private static Map<String, Image> sprites;
 
     public ContentManager() {
         sprites = new HashMap<>();
@@ -35,7 +35,7 @@ public class ContentManager {
         return file.list((current, name) -> new File(current, name).isFile());
     }
 
-    public Image getSprite(String name){
+    public static Image getSprite(String name){
         return sprites.get(name);
     }
 }
