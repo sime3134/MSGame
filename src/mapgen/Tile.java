@@ -1,13 +1,25 @@
 package mapgen;
 
-public class Tile {
+import entity.GameObject;
+import metrics.Vector2D;
+
+import java.awt.*;
+
+public class Tile extends GameObject {
     boolean node;
 
-    public Tile() {
+    public Tile(Image sprite, Vector2D pos) {
+        super(sprite, pos);
         this.node = false;
     }
 
-    public Tile(boolean node) {
+    public Tile(Image sprite, Vector2D pos, boolean node) {
+        super(sprite, pos);
         this.node = node;
+    }
+
+    @Override
+    public void update() {
+
     }
 }

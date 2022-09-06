@@ -1,7 +1,10 @@
 package mapgen;
 
+import core.Game;
+import metrics.Vector2D;
 import org.w3c.dom.Node;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Map {
@@ -14,18 +17,22 @@ public class Map {
     private ArrayList<Integer> newNodes;
     private int newNodePos;
 
-    public Map(int width, int height) {
+    public Map(Image standardSprite, int width, int height) {
         this.mapWidth = width;
         this.mapHeight = height;
         map = new Tile[width][height];
-        this.generateMap();
+        this.generateMap(standardSprite);
     }
 
-    private void generateMap() {
+    private Vector2D gridToPos(int row, int col) {
+        return new Vector2D(((float) col + .5f) * Game.tileSize, ((float) row + .5f) * Game.tileSize);
+    }
+
+    private void generateMap(Image sprite) {
         // Set all tiles to basic tiles
-        for (int y = 0; y < mapHeight; y++){
-            for (int x = 0; x < mapWidth; x++) {
-                map[y][x] = new Tile();
+        for (int row = 0; row < mapHeight; row++){
+            for (int col = 0; col < mapWidth; col++) {
+                map[row][col] = new Tile(sprite, gridToPos(row, col));
             }
         }
 
@@ -33,7 +40,7 @@ public class Map {
         int blockWidth = 10;
 
         // Generating start node
-        map[mapHeight/2][0] = new Tile(true);
+        map[mapHeight/2][0] = new Tile(sprite, gridToPos(mapHeight/2, 0),true);
         newNodes.add(mapHeight/2);
         newNodePos = 0;
 

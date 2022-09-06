@@ -14,6 +14,7 @@ public class Game {
     private final Player player;
 
     private final List<GameObject> gameObjects;
+    public static int tileSize = 24;
 
     public Game() {
         content = new ContentManager();
