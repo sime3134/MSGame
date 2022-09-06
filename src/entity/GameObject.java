@@ -13,6 +13,11 @@ public abstract class GameObject {
         position = new Vector2D(0,0);
     }
 
+    public GameObject(Image sprite, Vector2D position) {
+        this.sprite = sprite;
+        this.position = position;
+    }
+
     public abstract void update();
 
     public void draw(Graphics graphics) {
