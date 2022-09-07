@@ -1,5 +1,6 @@
 package entity;
 
+import gfx.Camera;
 import metrics.Vector2D;
 
 import java.awt.*;
@@ -20,7 +21,21 @@ public abstract class GameObject {
 
     public abstract void update();
 
-    public void draw(Graphics graphics) {
-        graphics.drawImage(sprite, position.intX(), position.intY(), null);
+    public void draw(Graphics graphics, Camera camera) {
+        graphics.drawImage(sprite, getRenderPosition(camera).intX(), getRenderPosition(camera).intY(), null);
+    }
+
+    public Vector2D getRenderPosition(Camera camera){
+        return new Vector2D(
+                getPosition().getX() - camera.getPosition().getX(),
+                getPosition().getY() - camera.getPosition().getY());
+    }
+
+    public Vector2D getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector2D position) {
+        this.position = position;
     }
 }
