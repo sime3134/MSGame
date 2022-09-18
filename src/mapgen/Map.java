@@ -9,7 +9,8 @@ import java.awt.*;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Stack;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class Map {
     Tile[][] map;
@@ -78,9 +79,11 @@ public class Map {
 
     private void connectNodes(Vector2D leftNode, Vector2D rightNode) {
         SecureRandom rand = new SecureRandom();
-        int noPoints = (int) rand.nextGaussian(3.0f, 2.0f);
+        //int noPoints = (int) rand.nextGaussian(3.0f, 1.0f);
+        int noPoints = 2;
         LinkedList<Vector2D> pointPosition = new LinkedList<>();
         pointPosition.add(leftNode);
+
         for (int i = 0; i < noPoints; i++) {
             int pointX = rand.nextInt(leftNode.intX(), rightNode.intX());
             int pointY;
@@ -89,29 +92,35 @@ public class Map {
             } else {
                 pointY = leftNode.intY() + rand.nextInt(-2, 2);
             }
+            System.out.println("X: " + pointX + " Y: " + pointY);
             pointPosition.add(new Vector2D(pointX, pointY));
         }
         pointPosition.add(rightNode);
-        while (pointPosition.size() > 1) {
-            // Randomizing starting direction as vertical or horizontal
-            Vector2D startPos = pointPosition.pop();
-            Vector2D endPos = pointPosition.peek();
-            if (rand.nextBoolean()) {
-                for (int col = Math.min(startPos.intX(), endPos.intX()); col < Math.max(startPos.intX(), endPos.intX()); col++) {
-                    map[startPos.intY()][col] = new Tile(ContentManager.getSprite("checker"), gridToPos(startPos.intY(), col));
-                }
-                for (int row = Math.min(startPos.intY(), endPos.intY()); row < Math.max(startPos.intY(), endPos.intY()); row++) {
-                    map[row][startPos.intX()] = new Tile(ContentManager.getSprite("checker"), gridToPos(row, startPos.intX()));
-                }
-            } else {
-                for (int row = Math.min(startPos.intY(), endPos.intY()); row < Math.max(startPos.intY(), endPos.intY()); row++) {
-                    map[row][startPos.intX()] = new Tile(ContentManager.getSprite("checker"), gridToPos(row, startPos.intX()));
-                }
-                for (int col = Math.min(startPos.intX(), endPos.intX()); col < Math.max(startPos.intX(), endPos.intX()); col++) {
-                    map[startPos.intY()][col] = new Tile(ContentManager.getSprite("checker"), gridToPos(startPos.intY(), col));
-                }
+
+        pointPosition.sort(Comparator.comparing(Vector2D::intX));
+        // Declare and initialize variables needed
+        int xPos = pointPosition.get(0).intX();
+        int yPos = pointPosition.get(0).intY();
+        int pointIndex = 1;
+        // Loop over and create all horizontal paths
+        while(xPos < pointPosition.peekLast().intX()) {
+            if (xPos == pointPosition.get(pointIndex).intX()) {
+                yPos = pointPosition.get(pointIndex).intY();
+                pointIndex++;
+            }
+            map[yPos][xPos] = new Tile(ContentManager.getSprite("checker"), gridToPos(yPos, xPos));
+            xPos++;
+        }
+        // Loop over and create all vertical paths
+        for(pointIndex = 0; pointIndex < pointPosition.size()-1; pointIndex++) {
+            xPos = pointPosition.get(pointIndex+1).intX();
+            yPos = Math.min(pointPosition.get(pointIndex).intY(), pointPosition.get(pointIndex+1).intY());
+            while (yPos < Math.max(pointPosition.get(pointIndex).intY(), pointPosition.get(pointIndex+1).intY())+1) {
+                map[yPos][xPos] = new Tile(ContentManager.getSprite("checker"), gridToPos(yPos, xPos));
+                yPos++;
             }
         }
+
     }
     public Tile[][] getMap() {
         return this.map;
