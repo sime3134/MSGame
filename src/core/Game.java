@@ -29,14 +29,16 @@ public class Game {
         camera = new Camera();
         player = new Player(PlayerController.getInstance(), content.getSprite("player"));
         gameObjects = new ArrayList<>();
-        map = new Map(30, 15);
+        map = new Map(30, 15, camera);
         gameObjects.add(player);
     }
 
     public void draw(Graphics graphics) {
         for (Tile[] row : map.getMap()) {
             for (Tile tile : row) {
-                tile.draw(graphics, camera);
+                if (tile != null) {
+                    tile.draw(graphics, camera);
+                }
             }
         }
         for(GameObject obj : gameObjects){
@@ -49,5 +51,6 @@ public class Game {
             obj.update();
         }
         camera.update();
+        map.generateNewPaths(camera);
     }
 }

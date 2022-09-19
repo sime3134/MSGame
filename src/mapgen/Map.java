@@ -2,6 +2,7 @@ package mapgen;
 
 import core.ContentManager;
 import core.Game;
+import gfx.Camera;
 import metrics.Vector2D;
 import org.w3c.dom.Node;
 
@@ -22,35 +23,43 @@ public class Map {
     private ArrayList<Integer> newNodes;
     private int newNodePos;
 
-    public Map(int width, int height) {
+    public Map(int width, int height, Camera camera) {
         this.mapWidth = width;
         this.mapHeight = height;
-        map = new Tile[height][width];
+        map = new Tile[height][width*3];
         newNodes = new ArrayList<>();
-        this.generateMap();
+        this.generateMap(camera);
     }
 
     private Vector2D gridToPos(int row, int col) {
         return new Vector2D((float) col * Game.tileSize, (float) row * Game.tileSize);
     }
 
-    private void generateMap() {
+    private Vector2D posToGrid(float x, float y) {
+        return new Vector2D((int) y / Game.tileSize, (int) x / Game.tileSize);
+    }
+
+    private void generateMap(Camera camera) {
         // Set all tiles to basic tiles
         for (int row = 0; row < mapHeight; row++){
             for (int col = 0; col < mapWidth; col++) {
                 map[row][col] = new Tile(gridToPos(row, col));
             }
         }
-
-        // Change this to something random
-        int blockWidth = 10;
-
         // Generating start node
         map[mapHeight/2][0] = new Tile(ContentManager.getSprite("checker"), gridToPos(mapHeight/2, 0),true);
         newNodes.add(mapHeight/2);
         newNodePos = 0;
 
-        while(newNodePos + blockWidth < this.mapWidth) {
+        generateNewPaths(camera);
+    }
+
+    public void generateNewPaths(Camera camera) {
+        // Change this to something random
+        int blockWidth = 14;
+
+        while(newNodePos - camera.getPosition().getX()/Game.tileSize + blockWidth < this.mapWidth) {
+            System.out.println("Generating new block");
             int oldNodePos = newNodePos;
             newNodePos = oldNodePos + blockWidth;
 
