@@ -19,6 +19,8 @@ public class Map {
     private int mapWidth;
     private int mapHeight;
     private int maxNodes = 8;
+    private int noBlocks = 3;
+    private int blocksDeleted = 0;
 
     private ArrayList<Integer> newNodes;
     private int newNodePos;
@@ -26,23 +28,24 @@ public class Map {
     public Map(int width, int height, Camera camera) {
         this.mapWidth = width;
         this.mapHeight = height;
-        map = new Tile[height][width*3];
+        map = new Tile[height][width*noBlocks];
         newNodes = new ArrayList<>();
         this.generateMap(camera);
     }
 
     private Vector2D gridToPos(int row, int col) {
-        return new Vector2D((float) col * Game.tileSize, (float) row * Game.tileSize);
+
+        return new Vector2D((float) (col+blocksDeleted*mapWidth) * Game.tileSize, (float) row * Game.tileSize);
     }
 
     private Vector2D posToGrid(float x, float y) {
-        return new Vector2D((int) y / Game.tileSize, (int) x / Game.tileSize);
+        return new Vector2D((int) y / Game.tileSize, (int) x / Game.tileSize - blocksDeleted*mapWidth);
     }
 
     private void generateMap(Camera camera) {
         // Set all tiles to basic tiles
         for (int row = 0; row < mapHeight; row++){
-            for (int col = 0; col < mapWidth; col++) {
+            for (int col = 0; col < mapWidth*noBlocks; col++) {
                 map[row][col] = new Tile(gridToPos(row, col));
             }
         }
@@ -56,12 +59,16 @@ public class Map {
 
     public void generateNewPaths(Camera camera) {
         // Change this to something random
-        int blockWidth = 14;
+        int pathWidth = 14;
 
-        while(newNodePos - camera.getPosition().getX()/Game.tileSize + blockWidth < this.mapWidth) {
+        while(newNodePos - camera.getPosition().getX()/Game.tileSize + pathWidth < this.mapWidth*(1 - blocksDeleted)) {
+            if (camera.getPosition().getX() > map[0][(int)mapWidth*1/2].getPosition().getX()) {
+                System.out.println("Deleting oldest block");
+                deleteOldestBlock();
+            }
             System.out.println("Generating new block");
             int oldNodePos = newNodePos;
-            newNodePos = oldNodePos + blockWidth;
+            newNodePos = oldNodePos + pathWidth;
 
             // Change this to something random
             int noNodes = 3;
@@ -78,6 +85,19 @@ public class Map {
                 createPaths(oldNodes, newNodes, oldNodePos, newNodePos);
             }
         }
+    }
+
+    private void deleteOldestBlock() {
+        for (int x = 0; x < mapWidth; x++) {
+            for (int y = 0; y < mapHeight; y++) {
+                map[y][x] = map[y][x + mapWidth];
+                map[y][x + mapWidth] = map[y][x + mapWidth*2];
+                Vector2D newPos = new Vector2D(map[y][x + mapWidth*2].getPosition().getX() + mapWidth * Game.tileSize, map[y][x + mapWidth*2].getPosition().getY());
+                map[y][x + mapWidth*2] = new Tile(newPos);
+            }
+        }
+        blocksDeleted++;
+        newNodePos -= mapWidth;
     }
 
     private void createPaths(ArrayList<Integer> leftNodes, ArrayList<Integer> rightNodes, int leftX, int rightX) {
