@@ -14,8 +14,8 @@ import java.awt.image.BufferStrategy;
  * The window frame that the game is displayed in.
  */
 public class GameWindow extends JFrame {
-    private int screenWidth = 720;
-    private int screenHeight = 480;
+    public static int SCREEN_WIDTH = 720;
+    public static int SCREEN_HEIGHT = 480;
     private final Game game;
     private final Canvas canvas;
 
@@ -28,7 +28,7 @@ public class GameWindow extends JFrame {
         addListener();
 
         canvas = new Canvas();
-        setPreferredSize(new Dimension(screenWidth, screenHeight));
+        setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         canvas.setPreferredSize(getContentPane().getPreferredSize());
         canvas.setFocusable(false);
         //canvas.addMouseListener(Input.getInstance());
@@ -49,8 +49,8 @@ public class GameWindow extends JFrame {
             public void componentResized(ComponentEvent e) {
                 setPreferredSize(e.getComponent().getSize());
                 pack();
-                screenWidth = getContentPane().getWidth();
-                screenHeight = getContentPane().getHeight();
+                SCREEN_WIDTH = getContentPane().getWidth();
+                SCREEN_HEIGHT = getContentPane().getHeight();
                 canvas.setPreferredSize(getContentPane().getPreferredSize());
             }
         });

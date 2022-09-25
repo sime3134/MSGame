@@ -1,5 +1,6 @@
 package entity;
 
+import core.Game;
 import input.Controller;
 import metrics.Vector2D;
 
@@ -16,7 +17,7 @@ public class MovingObject extends GameObject{
         speed = 4;
     }
 
-    public void update(){
+    public void update(Game game){
         int velocityX = 0;
         int velocityY = 0;
 

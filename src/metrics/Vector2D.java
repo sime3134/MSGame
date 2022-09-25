@@ -33,6 +33,13 @@ public class Vector2D {
         this.y = y;
     }
 
+    public Vector2D distanceTo(Vector2D otherPosition) {
+        double deltaX = this.getX() - otherPosition.getX();
+        double deltaY = this.getY() - otherPosition.getY();
+
+        return new Vector2D(deltaX, deltaY);
+    }
+
     public void normalize() {
         double length = Math.sqrt(x * x + y * y);
         if(x != 0) {
@@ -51,5 +58,10 @@ public class Vector2D {
     public void add(Vector2D vector) {
         x += vector.getX();
         y += vector.getY();
+    }
+
+    @Override
+    public String toString() {
+        return "X: " + x + "  Y: " + y;
     }
 }

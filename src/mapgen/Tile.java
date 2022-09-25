@@ -1,6 +1,7 @@
 package mapgen;
 
 import core.ContentManager;
+import core.Game;
 import entity.GameObject;
 import metrics.Vector2D;
 
@@ -25,7 +26,7 @@ public class Tile extends GameObject {
     }
 
     @Override
-    public void update() {
+    public void update(Game game) {
 
     }
 }

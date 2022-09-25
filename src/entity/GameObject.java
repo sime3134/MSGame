@@ -1,5 +1,6 @@
 package entity;
 
+import core.Game;
 import gfx.Camera;
 import metrics.Vector2D;
 
@@ -19,7 +20,7 @@ public abstract class GameObject {
         this.position = position;
     }
 
-    public abstract void update();
+    public abstract void update(Game game);
 
     public void draw(Graphics graphics, Camera camera) {
         graphics.drawImage(sprite, getRenderPosition(camera).intX(), getRenderPosition(camera).intY(), null);
