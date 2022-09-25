@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-
-    private ContentManager content;
-
     private Camera camera;
     private Player player;
     private Map map;
@@ -25,9 +22,9 @@ public class Game {
     private List<GameObject> gameObjects;
 
     public Game() {
-        content = new ContentManager();
+        ContentManager.loadContent();
         camera = new Camera();
-        player = new Player(PlayerController.getInstance(), content.getSprite("player"));
+        player = new Player(PlayerController.getInstance(), ContentManager.getSprite("player"));
         gameObjects = new ArrayList<>();
         map = new Map(30, 15, camera);
         gameObjects.add(player);

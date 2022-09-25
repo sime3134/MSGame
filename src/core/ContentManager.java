@@ -9,18 +9,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ContentManager {
-    private static Map<String, Image> sprites;
+    private static final Map<String, Image> sprites = new HashMap<>();
 
-    public ContentManager() {
-        sprites = new HashMap<>();
-        loadContent();
+    private ContentManager() {
     }
 
-    private void loadContent() {
+    public static void loadContent() {
         loadSprites("/sprites");
     }
 
-    private void loadSprites(String filePath) {
+    private static void loadSprites(String filePath) {
         String[] imagesInFolder = getImagesInFolder(filePath);
 
         for(String fileName : imagesInFolder) {
@@ -29,7 +27,7 @@ public class ContentManager {
         }
     }
 
-    private String[] getImagesInFolder(String filePath) {
+    private static String[] getImagesInFolder(String filePath) {
         URL resource = ContentManager.class.getResource(filePath);
         File file = new File(resource.getFile());
         return file.list((current, name) -> new File(current, name).isFile());
